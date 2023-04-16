@@ -55,6 +55,9 @@ public class Main {
                     System.out.println("End program");
                     completed = true;
                     break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+                    break;
             }
 
         }
@@ -85,13 +88,15 @@ public class Main {
 
                     break;
                 case 4:
-                    Menu.viewProductList();
+                    selectViewProductsMenu();
 
                     break;
                 case 5:
                     completed = true;
                     break;
-                //TBC
+                default:
+                    System.out.println("Invalid choice, please select a valid option.");
+                    break;
             }
         }
 
@@ -128,7 +133,9 @@ public class Main {
                 case 4:
                     completed = true;
                     break;
-                //TBC
+                default:
+                    System.out.println("Invalid choice, please select a valid option.");
+                    break;
             }
         }
     }
@@ -191,7 +198,19 @@ public class Main {
                     // code for managing products
                     break;
                 case 3:
-                    Menu.viewProductList();
+                    int productId = 0;
+                    boolean isProductIdValid = false;
+                    while (!isProductIdValid) {
+                        System.out.println("Enter Product Id: ");
+                        String input = Utilities.getString();
+                        try {
+                            productId = Integer.parseInt(input);
+                            isProductIdValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+                    Product.removeProduct(productId);
                     break;
                 case 4:
                     completed = true;
@@ -205,12 +224,110 @@ public class Main {
 
 
     public static void selectViewProductsMenu(){
+        boolean completed = false;
+        while(!completed){
 
+            Menu.viewProductList();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Select the option: ");
+            int choice = scanner.nextInt();
+            switch (choice){
+                case 1:
+                    int productId = 0;
+                    boolean isProductIdValid = false;
+                    while (!isProductIdValid) {
+                        System.out.println("Enter Product Id: ");
+                        String input = Utilities.getString();
+                        try {
+                            productId = Integer.parseInt(input);
+                            isProductIdValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+
+                    Product.getProductById(productId);
+                    break;
+                case 2:
+                    System.out.println("Enter product name: ");
+                    String productName = Utilities.getString();
+                    Product.getProductsByName(productName);
+                    break;
+                case 3:
+                    System.out.println("Enter supplier name: ");
+                    String supplierId = Utilities.getString();
+                    Product.getProductsBySupplierName(supplierId);
+                    break;
+                case 4:
+                    Product.printAllProducts();
+                    break;
+                case 5:
+                    completed = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+                    break;
+            }
+        }
 
 
     }
 
     public static void selectCustomerMenu(){
+        boolean completed = false;
+        boolean loggedIn = false; // add this variable
+        while (completed == false){
+            if (loggedIn) { // add this condition
+                Menu.showCustomerViewMenu(); // display the customer view menu
+            } else {
+                Menu.showCustomerMenu(); // display the customer menu
+            }
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Select the option: ");
+            int choice = scanner.nextInt();
+            switch (choice){
+                case 1:
+                    System.out.println("Enter Firstname: ");
+                    String firstname = Utilities.getString();
+                    System.out.println("Enter Lastname: ");
+                    String lastname = Utilities.getString();
+                    System.out.println("Enter City: ");
+                    String city = Utilities.getString();
+                    System.out.println("Enter Address: ");
+                    String address = Utilities.getString();
+                    System.out.println("Enter phonenumber:");
+                    String phoneNumber = Utilities.getString();
+                    System.out.println("Enter email:");
+                    String email = Utilities.getString();
+                    System.out.println("Enter country: ");
+                    String country = Utilities.getString();
+                    System.out.println("Enter username: ");
+                    String username = Utilities.getString();
+                    System.out.println("Enter password: ");
+                    String password = Utilities.getString();
+                    signUp(firstname,lastname,city,address,phoneNumber,email,country,username,password);
+                    break;
+                case 2:
+                    System.out.println("Enter Username: ");
+                    String Lusername = Utilities.getString();
+                    System.out.println("Enter password: ");
+                    String Lpassword = Utilities.getString();
+                    boolean loginSuccessful = loginCustomer(Lusername,Lpassword);
+                    if (loginSuccessful) {
+                        loggedIn = true; // set loggedIn to true
+                    }
+                    break;
+                case 3:
+                    completed = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+                    break;
+            }
+        }
+    }
+
+    /*public static void selectCustomerMenu(){
         boolean completed = false;
         while (completed == false){
             Menu.showCustomerMenu();
@@ -240,20 +357,30 @@ public class Main {
                     signUp(firstname,lastname,city,address,phoneNumber,email,country,username,password);
                     break;
                 case 2:
-                    loginCustomer("oliver123","123");
+                    System.out.println("Enter Username: ");
+                    String Lusername = Utilities.getString();
+                    System.out.println("Enter password: ");
+                    String Lpassword = Utilities.getString();
+                    boolean loginSuccessful = loginCustomer(Lusername,Lpassword);
+                    if (loginSuccessful) {
+                        Menu.showCustomerViewMenu();
+                    }
                     break;
                 case 3:
                     completed = true;
                     break;
-                    //TBC
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+                    break;
             }
         }
 
-    }
+    }*/
 
-    public static void loginCustomer(String username, String password) {
+    public static boolean loginCustomer(String username, String password) {
         Connection con = null;
         PreparedStatement stmt = null;
+        boolean loginSuccessful = false;
         try {
             con = getDatabase();
             con.setAutoCommit(false);
@@ -269,9 +396,12 @@ public class Main {
                 System.out.println("You have logged in");
                 System.out.printf("Username: %s", username);
                 System.out.println("");
+                loginSuccessful = true;
             }
             else {
+
                 System.out.println("Wrong username or password");
+                loginSuccessful = false;
             }
             stmt.close();
             con.commit();
@@ -281,7 +411,9 @@ public class Main {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
+
         }
+        return loginSuccessful;
     }
 
     public static void signUp(String firstname, String lastname, String city, String address, String phoneNumber, String email, String country, String username, String password) {
@@ -318,13 +450,6 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-
-
-   
-    public static void addProduct(String pName, String pID, int pQuantity, int pBasePrice, String pSuplier){
-        
     }
 
 

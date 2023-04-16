@@ -135,7 +135,25 @@ public class Main {
             int choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    signIn("Oliver","Bengtsson","Malmö","Kölgatan 9","0738294361","test@gmail.com","Sweden","oliver123","123");
+                    System.out.println("Enter Firstname: ");
+                    String firstname = Utilities.getString();
+                    System.out.println("Enter Lastname: ");
+                    String lastname = Utilities.getString();
+                    System.out.println("Enter City: ");
+                    String city = Utilities.getString();
+                    System.out.println("Enter Address: ");
+                    String address = Utilities.getString();
+                    System.out.println("Enter phonenumber:");
+                    String phoneNumber = Utilities.getString();
+                    System.out.println("Enter email:");
+                    String email = Utilities.getString();
+                    System.out.println("Enter country: ");
+                    String country = Utilities.getString();
+                    System.out.println("Enter username: ");
+                    String username = Utilities.getString();
+                    System.out.println("Enter password: ");
+                    String password = Utilities.getString();
+                    signIn(firstname,lastname,city,address,phoneNumber,email,country,username,password);
                     break;
                 case 2:
                     loginCustomer("oliver123","123");

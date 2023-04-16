@@ -200,26 +200,34 @@ public class Main {
         }
     }
 
-
-
-
     public static void signUp(String firstname, String lastname, String city, String address, String phoneNumber, String email, String country, String username, String password) {
 
         try (Connection con = getDatabase()) {
-            String sql = "INSERT INTO CUSTOMER (firstname, lastname, c_city, c_address, c_phone_number, c_email, c_country, c_username, c_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stmt = con.prepareStatement(sql);
+            // Check if email or username already exists in database
+            String sql = "SELECT * FROM CUSTOMER WHERE c_email = ? OR c_username = ?";
+            PreparedStatement checkStmt = con.prepareStatement(sql);
+            checkStmt.setString(1, email);
+            checkStmt.setString(2, username);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next()) {
+                // Email or username already exists, display error message and return
+                System.out.println("Email or username already in use");
+                return;
+            }
 
-            stmt.setString(1, firstname);
-            stmt.setString(2, lastname);
-            stmt.setString(3, city);
-            stmt.setString(4, address);
-            stmt.setString(5, phoneNumber);
-            stmt.setString(6, email);
-            stmt.setString(7, country);
-            stmt.setString(8, username);
-            stmt.setString(9, password);
-
-            stmt.executeUpdate();
+            // Email and username are unique, insert new record
+            String insertSql = "INSERT INTO CUSTOMER (firstname, lastname, c_city, c_address, c_phone_number, c_email, c_country, c_username, c_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement insertStmt = con.prepareStatement(insertSql);
+            insertStmt.setString(1, firstname);
+            insertStmt.setString(2, lastname);
+            insertStmt.setString(3, city);
+            insertStmt.setString(4, address);
+            insertStmt.setString(5, phoneNumber);
+            insertStmt.setString(6, email);
+            insertStmt.setString(7, country);
+            insertStmt.setString(8, username);
+            insertStmt.setString(9, password);
+            insertStmt.executeUpdate();
 
             System.out.println("Record inserted successfully");
 
@@ -227,6 +235,7 @@ public class Main {
             e.printStackTrace();
         }
     }
+    
 
     public static void addSupplier(String name, String phone, String address) {
         try (Connection con = getDatabase();
@@ -246,46 +255,7 @@ public class Main {
         }
     }
 
-    public static void signIn(String firstname, String lastname, String city, String address, String phoneNumber, String email, String country, String username, String password){
 
-        Connection con = null;
-        PreparedStatement stmt = null;
-        try {
-
-            Class.forName("org.postgresql.Driver");
-            con  = DriverManager
-                    .getConnection("jdbc:postgresql://pgserver.mau.se:5432/onlinestore_vot",
-                            "an7201", "ynvrxbxm");
-            con.setAutoCommit(false);
-            System.out.println("Opened database successfully");
-
-
-            String sql  = ("INSERT INTO CUSTOMER(firstname,lastname,c_city,c_address,c_phone_number,c_email,c_country,c_username,c_password)"+
-                    "VALUES(?,?,?,?,?,?,?,?,?);");
-            stmt = con.prepareStatement(sql);
-
-            stmt.setString(1,firstname);
-            stmt.setString(2,lastname);
-            stmt.setString(3,city);
-            stmt.setString(4,address);
-            stmt.setString(5,phoneNumber);
-            stmt.setString(6,email);
-            stmt.setString(7,country);
-            stmt.setString(8,username);
-            stmt.setString(9,password);
-            stmt.executeUpdate();
-            stmt.close();
-            con.commit();
-            con.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
-            System.exit(0);
-        }
-
-
-    }
    
     public static void addProduct(String pName, String pID, int pQuantity, int pBasePrice, String pSuplier){
         

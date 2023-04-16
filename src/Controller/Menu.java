@@ -54,7 +54,6 @@ package Controller;public class Menu {
         System.out.println("3. Search Products by Supplier");
         System.out.println("4. View All Products");
         System.out.println("5. Return to Main Menu");
-
     }
     public static void viewAdminMenu(){
         System.out.println("View:");

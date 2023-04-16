@@ -68,24 +68,58 @@ public class Product {
         }
     }
 
-    /*public static void addProduct(String pName, int pQuantity, int pBasePrice, int pSupplier){
-        try (Connection con = Main.getDatabase()){
-            String sql = "INSERT INTO PRODUCT (p_name, p_quantity, p_baseprice, p_supplier) VALUES (?, ?, ?, ?)";
+    public static void printAllProducts() {
+        try (Connection con = Main.getDatabase()) {
+            String sql = "SELECT * FROM PRODUCT";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, pName);
-            stmt.setInt(2, pQuantity);
-            stmt.setInt(3, pBasePrice);
-            stmt.setInt(4, pSupplier);
+            ResultSet rs = stmt.executeQuery();
 
-            stmt.executeUpdate();
-            System.out.println("Record inserted successfully");
+            while (rs.next()) {
+                String pID = rs.getString("p_id");
+                String pName = rs.getString("p_name");
+                int pQuantity = rs.getInt("p_quantity");
+                int pBasePrice = rs.getInt("p_baseprice");
+                int pSupplier = rs.getInt("p_supplier");
 
-
+                System.out.println("Product ID: " + pID);
+                System.out.println("Product Name: " + pName);
+                System.out.println("Product Quantity: " + pQuantity);
+                System.out.println("Product Base Price: " + pBasePrice);
+                System.out.println("Product Supplier: " + pSupplier);
+                System.out.println("-----------------------------");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }*/
+    }
+
+
+
+    /*public void getProductsBySupplierId(int supplierID) {
+        try (Connection con = Main.getDatabase()) {
+            String sql = "SELECT * FROM PRODUCT WHERE p_supplier = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, supplierID);
+
+            ResultSet rs = stmt.executeQuery();
+
+            // Loop through the result set and print the data
+            while (rs.next()) {
+                String name = rs.getString("p_name");
+                int quantity = rs.getInt("p_quantity");
+                int basePrice = rs.getInt("p_baseprice");
+
+                System.out.println("Product name: " + name);
+                System.out.println("Quantity: " + quantity);
+                System.out.println("Base price: " + basePrice);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+*/
 
     /**
      * Removes a product from the database

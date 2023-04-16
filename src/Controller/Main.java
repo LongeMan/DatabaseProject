@@ -191,7 +191,7 @@ public class Main {
                     // code for managing products
                     break;
                 case 3:
-                    // code for viewing products
+                    Menu.viewProductList();
                     break;
                 case 4:
                     completed = true;
@@ -204,42 +204,11 @@ public class Main {
     }
 
 
-    /*public static void selectManageProductMenu(){
-        boolean completed = false;
-        while(completed==false){
-            Menu.manageProductMenu();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
-
-            switch (choice){
-                case 1:
-                    System.out.println("Adding Supplier now:");
-                    System.out.println("Enter product name: ");
-                    String productName = Utilities.getString();
-                    System.out.println("Enter Quantity");
-                    int productQuantity = Integer.parseInt(Utilities.getString());
-                    System.out.println("Enter BasePrice ");
-                    int productBasePrice = Integer.parseInt(Utilities.getString());
-                    System.out.println("Enter supplier ");
-                    String supplier = Utilities.getString();
-                    Product.addProduct(productName, productQuantity,productBasePrice,supplier);
-                    break;
-                case 2:
+    public static void selectViewProductsMenu(){
 
 
-                    break;
-                case 3:
 
-
-                    break;
-                case 4:
-                    completed = true;
-                    break;
-                //TBC
-            }
-        }
-    }*/
+    }
 
     public static void selectCustomerMenu(){
         boolean completed = false;

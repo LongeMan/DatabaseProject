@@ -79,9 +79,20 @@ public class Main {
 
             switch (choice){
                 case 1:
+                    selectManageSupplierMenu();
+                    break;
                 case 2:
+                    Menu.manageProductMenu();
+
+                    break;
                 case 3:
+                    Menu.manageDiscountMenu();
+
+                    break;
                 case 4:
+                    Menu.viewProductList();
+
+                    break;
                 case 5:
                     completed = true;
                     break;
@@ -91,16 +102,58 @@ public class Main {
 
     }
 
-    /*
-     System.out.println("Enter name: ");
-    String name = Utilities.getString();
+    public static void selectManageSupplierMenu(){
+        boolean completed = false;
+        while(completed==false){
+            Menu.manageSupplierMenu();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Select the option: ");
+            int choice = scanner.nextInt();
+
+            switch (choice){
+                case 1:
+                    System.out.println("Adding Supplier now:");
+                    System.out.println("Enter name: ");
+                    String name = Utilities.getString();
                     System.out.println("Enter phonenumber:");
+<<<<<<< Updated upstream
     String phone = Utilities.getString();
                     System.out.println("Enter city, country, adress: ");
     String adress = Utilities.getString();
     addSupplier(name,phone,adress);
 */
 
+=======
+                    String phone = Utilities.getString();
+                    System.out.println("Enter adress: ");
+                    String adress = Utilities.getString();
+                    Supplier.addSupplier(name,phone,adress);
+
+                    break;
+                case 2:
+
+
+                    break;
+                case 3:
+
+
+                    break;
+                case 4:
+                    completed = true;
+                    break;
+                //TBC
+            }
+        }
+
+
+
+    }
+
+
+
+
+    
+>>>>>>> Stashed changes
     public static void selectCustomerMenu(){
         boolean completed = false;
         while (completed == false){
@@ -211,24 +264,6 @@ public class Main {
         }
     }
 
-
-    public static void addSupplier(String name, String phone, String address) {
-        try (Connection con = getDatabase();
-             PreparedStatement stmt = con.prepareStatement("INSERT INTO SUPPLIER(s_name, s_phone, s_address) VALUES (?, ?, ?)")) {
-
-            stmt.setString(1, name);
-            stmt.setString(2, phone);
-            stmt.setString(3, address);
-            stmt.executeUpdate();
-
-            System.out.println("Supplier added successfully");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-    }
 
 
    

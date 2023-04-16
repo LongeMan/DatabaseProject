@@ -246,5 +246,51 @@ public class Main {
         }
     }
 
+    public static void signIn(String firstname, String lastname, String city, String address, String phoneNumber, String email, String country, String username, String password){
+
+        Connection con = null;
+        PreparedStatement stmt = null;
+        try {
+
+            Class.forName("org.postgresql.Driver");
+            con  = DriverManager
+                    .getConnection("jdbc:postgresql://pgserver.mau.se:5432/onlinestore_vot",
+                            "an7201", "ynvrxbxm");
+            con.setAutoCommit(false);
+            System.out.println("Opened database successfully");
+
+
+            String sql  = ("INSERT INTO CUSTOMER(firstname,lastname,c_city,c_address,c_phone_number,c_email,c_country,c_username,c_password)"+
+                    "VALUES(?,?,?,?,?,?,?,?,?);");
+            stmt = con.prepareStatement(sql);
+
+            stmt.setString(1,firstname);
+            stmt.setString(2,lastname);
+            stmt.setString(3,city);
+            stmt.setString(4,address);
+            stmt.setString(5,phoneNumber);
+            stmt.setString(6,email);
+            stmt.setString(7,country);
+            stmt.setString(8,username);
+            stmt.setString(9,password);
+            stmt.executeUpdate();
+            stmt.close();
+            con.commit();
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+
+
+    }
+   
+    public static void addProduct(String pName, String pID, int pQuantity, int pBasePrice, String pSuplier){
+        
+    }
+
+
 }
 

@@ -100,7 +100,7 @@ public class Main {
     String adress = Utilities.getString();
     addSupplier(name,phone,adress);
 */
-    
+
     public static void selectCustomerMenu(){
         boolean completed = false;
         while (completed == false){

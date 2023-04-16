@@ -6,14 +6,14 @@ package Controller;public class Menu {
         System.out.println("3. End program");
     }
 
-        public static void showAdminMenu(){
-            System.out.println("Admin Menu");
-            System.out.println("1. Manage Supplier");
-            System.out.println("2. Manage Product");
-            System.out.println("3. Manage Discounts");
-            System.out.println("4. View Product list");
-            System.out.println("5. Go back to main menu");
-        }
+    public static void showAdminMenu(){
+        System.out.println("Admin Menu");
+        System.out.println("1. Manage Supplier");
+        System.out.println("2. Manage Product");
+        System.out.println("3. Manage Discounts");
+        System.out.println("4. View Product list");
+        System.out.println("5. Go back to main menu");
+    }
 
     public static void showCustomerMenu(){
         System.out.println("Customer Menu");
@@ -23,8 +23,7 @@ package Controller;public class Menu {
 
     }
 
-
-        public static void manageSupplierMenu(){
+    public static void manageSupplierMenu(){
         System.out.println("Manage Suppliers:");
         System.out.println("1. Add New Supplier");
         System.out.println("2. Edit Supplier Information");

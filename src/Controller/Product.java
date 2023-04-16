@@ -1,8 +1,8 @@
-package Module;
-import Controller.*;
+package Controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Product {
@@ -34,21 +34,48 @@ public class Product {
     /**
      * Adds a product to the SQL database
      * @param pName Product name
-     * @param pID Product ID
      * @param pQuantity Product quantity
      * @param pBasePrice Products baseprice
      * @param pSupplier Products supplier
      */
 
-    public void addProduct(String pName, String pID, int pQuantity, int pBasePrice, String pSupplier){
+
+    public static void addProduct(String pName, int pQuantity, int pBasePrice, int pSupplier){
         try (Connection con = Main.getDatabase()){
-            String sql = "INSERT INTO PRODUCT (p_name, p_id, p_quantity, p_baseprice, p_supplier) VALUES (?, ?, ?, ?, ?)";
+            // Check if the pSupplier value exists in the SUPPLIER table
+            String checkSql = "SELECT supplier_id FROM SUPPLIER WHERE supplier_id = ?";
+            PreparedStatement checkStmt = con.prepareStatement(checkSql);
+            checkStmt.setInt(1, pSupplier);
+            ResultSet rs = checkStmt.executeQuery();
+            if (!rs.next()) {
+                throw new IllegalArgumentException("Invalid supplier ID");
+            }
+
+            // If the pSupplier value is valid, insert a new record into the PRODUCT table
+            String sql = "INSERT INTO PRODUCT (p_name, p_quantity, p_baseprice, p_supplier) VALUES (?, ?, ?, ?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1, pName);
-            stmt.setString(2, pID);
-            stmt.setInt(3, pQuantity);
-            stmt.setInt(4, pBasePrice);
-            stmt.setString(5, pSupplier);
+            stmt.setInt(2, pQuantity);
+            stmt.setInt(3, pBasePrice);
+            stmt.setInt(4, pSupplier);
+
+            stmt.executeUpdate();
+            System.out.println("Record inserted successfully");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    /*public static void addProduct(String pName, int pQuantity, int pBasePrice, int pSupplier){
+        try (Connection con = Main.getDatabase()){
+            String sql = "INSERT INTO PRODUCT (p_name, p_quantity, p_baseprice, p_supplier) VALUES (?, ?, ?, ?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, pName);
+            stmt.setInt(2, pQuantity);
+            stmt.setInt(3, pBasePrice);
+            stmt.setInt(4, pSupplier);
 
             stmt.executeUpdate();
             System.out.println("Record inserted successfully");
@@ -58,7 +85,7 @@ public class Product {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
     /**
      * Removes a product from the database

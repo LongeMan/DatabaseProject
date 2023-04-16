@@ -1,4 +1,4 @@
-package Module;
+package Controller;
 import Controller.*;
 
 public class Discount {

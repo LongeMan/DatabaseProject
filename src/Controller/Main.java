@@ -62,11 +62,6 @@ public class Main {
 
     }
 
-    public static void  selectMainMenu(){
-        //TO  BE CONTINUED
-    }
-
-
     public static void selectAdminMenu(){
 
         boolean completed = false;
@@ -82,7 +77,7 @@ public class Main {
                     selectManageSupplierMenu();
                     break;
                 case 2:
-                    Menu.manageProductMenu();
+                    selectManageProductMenu();
 
                     break;
                 case 3:
@@ -116,14 +111,6 @@ public class Main {
                     System.out.println("Enter name: ");
                     String name = Utilities.getString();
                     System.out.println("Enter phonenumber:");
-<<<<<<< Updated upstream
-    String phone = Utilities.getString();
-                    System.out.println("Enter city, country, adress: ");
-    String adress = Utilities.getString();
-    addSupplier(name,phone,adress);
-*/
-
-=======
                     String phone = Utilities.getString();
                     System.out.println("Enter adress: ");
                     String adress = Utilities.getString();
@@ -144,16 +131,116 @@ public class Main {
                 //TBC
             }
         }
-
-
-
     }
 
 
+    public static void selectManageProductMenu() {
+        boolean completed = false;
+        while (!completed) {
+            Menu.manageProductMenu();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Select the option: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("Adding product now:");
+                    System.out.println("Enter product name: ");
+                    String productName = Utilities.getString();
+
+                    int productQuantity = 0;
+                    boolean isProductQuantityValid = false;
+                    while (!isProductQuantityValid) {
+                        System.out.println("Enter Quantity: ");
+                        String input = Utilities.getString();
+                        try {
+                            productQuantity = Integer.parseInt(input);
+                            isProductQuantityValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+
+                    int productBasePrice = 0;
+                    boolean isProductBasePriceValid = false;
+                    while (!isProductBasePriceValid) {
+                        System.out.println("Enter BasePrice: ");
+                        String input = Utilities.getString();
+                        try {
+                            productBasePrice = Integer.parseInt(input);
+                            isProductBasePriceValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+                    int supplier = 0;
+                    boolean isSupplierValid = false;
+                    while (!isSupplierValid) {
+                        System.out.println("Enter supplier: ");
+                        String input = Utilities.getString();
+                        try {
+                            supplier = Integer.parseInt(input);
+                            isSupplierValid = true;
+                        }catch(NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+                    Product.addProduct(productName, productQuantity, productBasePrice, supplier);
+                    break;
+                case 2:
+                    // code for managing products
+                    break;
+                case 3:
+                    // code for viewing products
+                    break;
+                case 4:
+                    completed = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+                    break;
+            }
+        }
+    }
 
 
-    
->>>>>>> Stashed changes
+    /*public static void selectManageProductMenu(){
+        boolean completed = false;
+        while(completed==false){
+            Menu.manageProductMenu();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Select the option: ");
+            int choice = scanner.nextInt();
+
+            switch (choice){
+                case 1:
+                    System.out.println("Adding Supplier now:");
+                    System.out.println("Enter product name: ");
+                    String productName = Utilities.getString();
+                    System.out.println("Enter Quantity");
+                    int productQuantity = Integer.parseInt(Utilities.getString());
+                    System.out.println("Enter BasePrice ");
+                    int productBasePrice = Integer.parseInt(Utilities.getString());
+                    System.out.println("Enter supplier ");
+                    String supplier = Utilities.getString();
+                    Product.addProduct(productName, productQuantity,productBasePrice,supplier);
+                    break;
+                case 2:
+
+
+                    break;
+                case 3:
+
+
+                    break;
+                case 4:
+                    completed = true;
+                    break;
+                //TBC
+            }
+        }
+    }*/
+
     public static void selectCustomerMenu(){
         boolean completed = false;
         while (completed == false){

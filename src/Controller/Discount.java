@@ -1,4 +1,4 @@
-package Module;
+package Controller;
 import Controller.*;
 
 import java.sql.Connection;

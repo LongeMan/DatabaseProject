@@ -26,10 +26,9 @@ package Controller;public class Menu {
     public static void manageSupplierMenu(){
         System.out.println("Manage Suppliers:");
         System.out.println("1. Add New Supplier");
-        System.out.println("2. Edit Supplier Information");
-        System.out.println("3. Delete Supplier");
-        System.out.println("4. View All Suppliers");
-        System.out.println("5. Return to Main Menu");
+        System.out.println("2. Delete Supplier");//
+        System.out.println("3. View All Suppliers");//
+        System.out.println("4. Return to Main Menu");
     }
 
     public static void manageProductMenu(){

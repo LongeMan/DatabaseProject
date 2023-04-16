@@ -153,7 +153,7 @@ public class Main {
                     String username = Utilities.getString();
                     System.out.println("Enter password: ");
                     String password = Utilities.getString();
-                    signIn(firstname,lastname,city,address,phoneNumber,email,country,username,password);
+                    signUp(firstname,lastname,city,address,phoneNumber,email,country,username,password);
                     break;
                 case 2:
                     loginCustomer("oliver123","123");
@@ -166,15 +166,12 @@ public class Main {
         }
 
     }
+
     public static void loginCustomer(String username, String password) {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-
-            Class.forName("org.postgresql.Driver");
-            con = DriverManager
-                    .getConnection("jdbc:postgresql://pgserver.mau.se:5432/onlinestore_vot",
-                            "an7201", "ynvrxbxm");
+            con = getDatabase();
             con.setAutoCommit(false);
             System.out.println("Opened database successfully");
 
@@ -184,10 +181,8 @@ public class Main {
             stmt.setString(2,password);
 
             ResultSet result = stmt.executeQuery();
-            //String username1 = result.getString("c_username");
             if (result.next()){
                 System.out.println("You have logged in");
-                //MENU FOR CUSTOMER METHOD
                 System.out.printf("Username: %s", username);
                 System.out.println("");
             }
@@ -198,85 +193,57 @@ public class Main {
             con.commit();
             con.close();
 
-
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
     }
-    public static void signIn(String firstname, String lastname, String city, String address, String phoneNumber, String email, String country, String username, String password){
-
-        Connection con = null;
-        PreparedStatement stmt = null;
-        try {
-
-            Class.forName("org.postgresql.Driver");
-            con  = DriverManager
-                    .getConnection("jdbc:postgresql://pgserver.mau.se:5432/onlinestore_vot",
-                            "an7201", "ynvrxbxm");
-            con.setAutoCommit(false);
-            System.out.println("Opened database successfully");
 
 
-            String sql  = ("INSERT INTO CUSTOMER(firstname,lastname,c_city,c_address,c_phone_number,c_email,c_country,c_username,c_password)"+
-                    "VALUES(?,?,?,?,?,?,?,?,?);");
-            stmt = con.prepareStatement(sql);
 
-            stmt.setString(1,firstname);
-            stmt.setString(2,lastname);
-            stmt.setString(3,city);
-            stmt.setString(4,address);
-            stmt.setString(5,phoneNumber);
-            stmt.setString(6,email);
-            stmt.setString(7,country);
-            stmt.setString(8,username);
-            stmt.setString(9,password);
+
+    public static void signUp(String firstname, String lastname, String city, String address, String phoneNumber, String email, String country, String username, String password) {
+
+        try (Connection con = getDatabase()) {
+            String sql = "INSERT INTO CUSTOMER (firstname, lastname, c_city, c_address, c_phone_number, c_email, c_country, c_username, c_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            stmt.setString(1, firstname);
+            stmt.setString(2, lastname);
+            stmt.setString(3, city);
+            stmt.setString(4, address);
+            stmt.setString(5, phoneNumber);
+            stmt.setString(6, email);
+            stmt.setString(7, country);
+            stmt.setString(8, username);
+            stmt.setString(9, password);
+
             stmt.executeUpdate();
-            stmt.close();
-            con.commit();
-            con.close();
 
-        } catch (Exception e) {
+            System.out.println("Record inserted successfully");
+
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
-            System.exit(0);
         }
-
-
     }
-    public static void addSupplier(String name, String phone,String adress){
-        Connection con = null;
-        PreparedStatement stmt = null;
-        try {
 
-            Class.forName("org.postgresql.Driver");
-            con  = DriverManager
-                    .getConnection("jdbc:postgresql://pgserver.mau.se:5432/onlinestore_vot",
-                            "an7201", "ynvrxbxm");
-            con.setAutoCommit(false);
-            System.out.println("Opened database successfully");
+    public static void addSupplier(String name, String phone, String address) {
+        try (Connection con = getDatabase();
+             PreparedStatement stmt = con.prepareStatement("INSERT INTO SUPPLIER(s_name, s_phone, s_address) VALUES (?, ?, ?)")) {
 
-
-            String sql  = ("INSERT INTO SUPPLIER(s_name,s_phone,s_adress)"+
-                    "VALUES(?,?,?);");
-            stmt = con.prepareStatement(sql);
-
-            stmt.setString(1,name);
-            stmt.setString(2,phone);
-            stmt.setString(3,adress);
-
+            stmt.setString(1, name);
+            stmt.setString(2, phone);
+            stmt.setString(3, address);
             stmt.executeUpdate();
-            stmt.close();
-            con.commit();
-            con.close();
+
+            System.out.println("Supplier added successfully");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-
     }
 
 }

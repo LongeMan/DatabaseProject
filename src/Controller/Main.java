@@ -260,6 +260,9 @@ public class Main {
         }
 
     }
+    public static void addProduct(String pName, String pID, int pQuantity, int pBasePrice, String pSuplier){
+        
+    }
 
 }
 

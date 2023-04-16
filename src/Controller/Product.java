@@ -96,11 +96,11 @@ public class Product {
 
 
 
-    /*public void getProductsBySupplierId(int supplierID) {
+    public static void getProductsBySupplierName(String supplierName) {
         try (Connection con = Main.getDatabase()) {
-            String sql = "SELECT * FROM PRODUCT WHERE p_supplier = ?";
+            String sql = "SELECT * FROM Product p JOIN Supplier s ON p.p_supplier = s.supplier_id WHERE s.s_name = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, supplierID);
+            stmt.setString(1, supplierName);
 
             ResultSet rs = stmt.executeQuery();
 
@@ -113,28 +113,97 @@ public class Product {
                 System.out.println("Product name: " + name);
                 System.out.println("Quantity: " + quantity);
                 System.out.println("Base price: " + basePrice);
+                System.out.println("-----------------------------");
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
-*/
+
+
+    public static void getProductById(int productId){
+        try (Connection con = Main.getDatabase()) {
+            String sql = "SELECT * FROM PRODUCT WHERE p_id = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, productId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            // Loop through the result set and print the data
+            while (rs.next()) {
+                String name = rs.getString("p_name");
+                int quantity = rs.getInt("p_quantity");
+                int basePrice = rs.getInt("p_baseprice");
+
+                System.out.println("Product name: " + name);
+                System.out.println("Quantity: " + quantity);
+                System.out.println("Base price: " + basePrice);
+                System.out.println("-----------------------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getProductsByName(String productName) {
+        try (Connection con = Main.getDatabase()) {
+            String sql = "SELECT * FROM PRODUCT WHERE p_name LIKE ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, "%" + productName + "%");
+
+            ResultSet rs = stmt.executeQuery();
+
+            // Loop through the result set and print the data
+            while (rs.next()) {
+                String name = rs.getString("p_name");
+                int quantity = rs.getInt("p_quantity");
+                int basePrice = rs.getInt("p_baseprice");
+
+                System.out.println("Product name: " + name);
+                System.out.println("Quantity: " + quantity);
+                System.out.println("Base price: " + basePrice);
+                System.out.println("-----------------------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     /**
      * Removes a product from the database
      * @param pID product ID which is designated
      */
-    public void removeProduct(String pID){
+    public static void removeProduct(int pID){
         try(Connection con = Main.getDatabase()){
-            String sql = (" DELETE FROM PRODUCT WHERE p_id = ?");
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1,pID);
-            stmt.executeUpdate();
-        }catch (Exception e){
+            String selectSql = "SELECT p.p_name, s.s_name FROM product p INNER JOIN supplier s ON p.p_supplier = s.supplier_id WHERE p.p_id = ?";
+            PreparedStatement selectStmt = con.prepareStatement(selectSql);
+            selectStmt.setInt(1, pID);
+            ResultSet rs = selectStmt.executeQuery();
+            String productName = "";
+            String supplierName = "";
+            if (rs.next()) {
+                productName = rs.getString("p_name");
+                supplierName = rs.getString("s_name");
+            }
+            String deleteSql = "DELETE FROM product WHERE p_id = ?";
+            PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+            deleteStmt.setInt(1, pID);
+            int rowsDeleted = deleteStmt.executeUpdate();
+            if (rowsDeleted == 1) {
+                System.out.println("Product \"" + productName + "\" has been removed by supplier \"" + supplierName + "\".");
+            } else {
+                System.out.println("Product with ID " + pID + " was not found.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
+
 
 }

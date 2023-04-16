@@ -3,6 +3,7 @@ import Controller.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Discount {
@@ -27,15 +28,33 @@ public class Discount {
             e.printStackTrace();
         }
     }
-    public void checkDiscount(String dCode){
+    public void checkDiscount(String dCode, int productId){
         try (Connection con = Main.getDatabase()){
-            String sql = "SELECT FROM DISCOUNT WHERE (d_code = ?)";
+            String sql = "SELECT * FROM DISCOUNT WHERE (d_code = ?)";
             PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setString(1,dCode);
-            stmt.executeUpdate();
-            System.out.println("Record inserted successfully");
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                System.out.println("Record was successfully found");
+                
+            }
+            else {
+                System.out.println("Record was not found");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void setNewPrice(int productId, double discount){
+        try(Connection con = Main.getDatabase()){
+            String sql = "SELECT p_baseprice FROM PRODUCT WHERE (p_id = ?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1,productId);
+            ResultSet rs = stmt.executeQuery();
 
+            if (rs.next()){
 
+            }
 
         }catch (Exception e){
             e.printStackTrace();

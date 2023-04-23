@@ -84,7 +84,7 @@ public class Main {
 
                     break;
                 case 3:
-                    Menu.manageDiscountMenu();
+                    selectManageDiscountMenu();
 
                     break;
                 case 4:
@@ -183,7 +183,8 @@ public class Main {
                     int supplier = 0;
                     boolean isSupplierValid = false;
                     while (!isSupplierValid) {
-                        System.out.println("Enter supplier: ");
+                        Supplier.printAllSuppliers();
+                        System.out.println("Enter supplier id: ");
                         String input = Utilities.getString();
                         try {
                             supplier = Integer.parseInt(input);
@@ -212,11 +213,84 @@ public class Main {
                     }
                     Product.removeProduct(productId);
                     break;
-                case 4:
+                case 5:
                     completed = true;
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
+                    break;
+            }
+        }
+    }
+    public static void selectManageDiscountMenu(){
+        boolean completed = false;
+        while(completed==false){
+            Menu.manageDiscountMenu();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Select the option: ");
+            int choice = scanner.nextInt();
+
+            switch (choice){
+                case 1:
+                    System.out.println("Adding discount now:");
+                    Product.printAllProducts();
+
+                    int productId = 0;
+                    boolean isProductIdValid = false;
+                    while (!isProductIdValid) {
+                        System.out.println("Enter Product Id: ");
+                        String input = Utilities.getString();
+                        try {
+                            productId = Integer.parseInt(input);
+                            isProductIdValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+
+                    double discount = 0.0;
+                    boolean isDiscountValueValid = false;
+                    while (!isDiscountValueValid) {
+                        System.out.println("Enter discount in decimals: ");
+                        String input = Utilities.getString();
+                        try {
+                            discount = Double.parseDouble(input);
+                            isDiscountValueValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter a double.");
+                        }
+                    }
+
+                    int period = 0;
+                    boolean isPeriodValid = false;
+                    while (!isPeriodValid) {
+                        System.out.println("Enter period in days: ");
+                        String input = Utilities.getString();
+                        try {
+                            period = Integer.parseInt(input);
+                            isPeriodValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+                    System.out.println("Enter discount code");
+                    String dCode = Utilities.getString();
+                    Discount.addDiscount(productId, discount, period,dCode);
+
+                    break;
+                case 2:
+                    Discount.printAllActiveDiscounts();
+
+                    break;
+                case 3:
+                    Discount.printAllDiscounts();
+
+                    break;
+                case 4:
+                    completed = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice, please select a valid option.");
                     break;
             }
         }
@@ -278,7 +352,7 @@ public class Main {
         boolean loggedIn = false; // add this variable
         while (completed == false){
             if (loggedIn) { // add this condition
-                Menu.showCustomerViewMenu(); // display the customer view menu
+                selectCustomerViewMenu();
             } else {
                 Menu.showCustomerMenu(); // display the customer menu
             }
@@ -315,6 +389,9 @@ public class Main {
                     boolean loginSuccessful = loginCustomer(Lusername,Lpassword);
                     if (loginSuccessful) {
                         loggedIn = true; // set loggedIn to true
+
+
+
                     }
                     break;
                 case 3:
@@ -326,45 +403,21 @@ public class Main {
             }
         }
     }
-
-    /*public static void selectCustomerMenu(){
+    public static void selectCustomerViewMenu(){
         boolean completed = false;
+        Menu.showCustomerViewMenu();
+
         while (completed == false){
-            Menu.showCustomerMenu();
+
             Scanner scanner = new Scanner(System.in);
             System.out.print("Select the option: ");
             int choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    System.out.println("Enter Firstname: ");
-                    String firstname = Utilities.getString();
-                    System.out.println("Enter Lastname: ");
-                    String lastname = Utilities.getString();
-                    System.out.println("Enter City: ");
-                    String city = Utilities.getString();
-                    System.out.println("Enter Address: ");
-                    String address = Utilities.getString();
-                    System.out.println("Enter phonenumber:");
-                    String phoneNumber = Utilities.getString();
-                    System.out.println("Enter email:");
-                    String email = Utilities.getString();
-                    System.out.println("Enter country: ");
-                    String country = Utilities.getString();
-                    System.out.println("Enter username: ");
-                    String username = Utilities.getString();
-                    System.out.println("Enter password: ");
-                    String password = Utilities.getString();
-                    signUp(firstname,lastname,city,address,phoneNumber,email,country,username,password);
+                    Product.printAllProducts();
                     break;
                 case 2:
-                    System.out.println("Enter Username: ");
-                    String Lusername = Utilities.getString();
-                    System.out.println("Enter password: ");
-                    String Lpassword = Utilities.getString();
-                    boolean loginSuccessful = loginCustomer(Lusername,Lpassword);
-                    if (loginSuccessful) {
-                        Menu.showCustomerViewMenu();
-                    }
+
                     break;
                 case 3:
                     completed = true;
@@ -374,8 +427,10 @@ public class Main {
                     break;
             }
         }
+    }
 
-    }*/
+
+
 
     public static boolean loginCustomer(String username, String password) {
         Connection con = null;

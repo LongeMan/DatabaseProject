@@ -47,18 +47,17 @@ package Controller;public class Menu {
     public static void manageProductMenu(){
         System.out.println("Manage Products:");
         System.out.println("1. Add New Product");
-        System.out.println("2. Edit Product Information");
-        System.out.println("3. Delete Product");
-        System.out.println("4. Adjust Product Quantity");
+        System.out.println("2. Edit Product Information not implemented");
+        System.out.println("3. Delete Product not");
+        System.out.println("4. Adjust Product Quantity not implemented");
         System.out.println("5. Return to Main Menu");
         System.out.println("-----------------------------");
     }
     public static void manageDiscountMenu(){
         System.out.println("Manage Discounts:");
-        System.out.println("1. Add New Discount Category");
-        System.out.println("2. Assign Discount to Product");
-        System.out.println("3. View Discount History");
-        System.out.println("4. Return to Main Menu");
+        System.out.println("1. Assign Discount to Product");
+        System.out.println("2. View Discount History");
+        System.out.println("3. Return to Main Menu");
         System.out.println("-----------------------------");
     }
 
@@ -70,13 +69,6 @@ package Controller;public class Menu {
         System.out.println("4. View All Products");
         System.out.println("5. Return to Main Menu");
         System.out.println("-----------------------------");
-    }
-    public static void viewAdminMenu(){
-        System.out.println("View:");
-        System.out.println("1. Suppliers");
-        System.out.println("2. Products");
-        System.out.println("-----------------------------");
-        //NEEDS MORE
     }
 
 }

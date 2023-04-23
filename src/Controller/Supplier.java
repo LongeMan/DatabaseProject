@@ -28,6 +28,27 @@ public class Supplier {
     }
 
 
+    public static void printAllSuppliers() {
+        try (Connection con = Main.getDatabase()) {
+            String sql = "SELECT * FROM SUPPLIER";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String supplierId = rs.getString("supplier_id");
+                String pName = rs.getString("s_name");
+
+
+                System.out.println("Product ID: " + supplierId);
+                System.out.println("Product Name: " + pName);
+                System.out.println("-----------------------------");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 

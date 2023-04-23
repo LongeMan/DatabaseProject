@@ -40,6 +40,67 @@ public class Discount {
             throw new RuntimeException(e);
         }
     }
+    public static void insertDiscount(int customerId, String d_code) {
+        try (Connection conn = Main.getDatabase();
+             Statement stmt = conn.createStatement()) {
+
+            // Check if the discount code is still active
+            String checkPeriodSql = "SELECT * FROM discounts " +
+                    "WHERE d_code = '" + d_code + "' " +
+                    "AND start_date <= CURRENT_DATE " +
+                    "AND (start_date + (period * INTERVAL '1 DAY')) >= CURRENT_DATE";
+            ResultSet periodResult = stmt.executeQuery(checkPeriodSql);
+
+            if (!periodResult.next()) {
+                System.out.println("Discount code " + d_code + " is not currently active.");
+                return;
+            }
+
+            // Check if customer has an order that is not confirmed yet
+            String checkOrderSql = "SELECT * FROM orders WHERE customer_id = " + customerId +
+                    " AND order_id NOT IN (SELECT order_id FROM confirmation)";
+            ResultSet orderResult = stmt.executeQuery(checkOrderSql);
+
+            int orderId = -1; // initialize orderId to an invalid value
+            if (orderResult.next()) {
+                orderId = orderResult.getInt("order_id"); // get the order_id from the result set
+            } else {
+                System.out.println("Customer has no orders that are not confirmed yet.");
+                return;
+            }
+
+            // Get the discount amount from the discounts table
+            String discountAmountSql = "SELECT discount FROM discounts WHERE d_code = '" + d_code + "'";
+            ResultSet discountAmountResult = stmt.executeQuery(discountAmountSql);
+            double discount = 0.0; // initialize discount to 0.0 in case there are no results
+            if (discountAmountResult.next()) {
+                discount = discountAmountResult.getDouble("discount");
+            }
+
+            // Get the order items for the given order ID
+            String getOrderItemsSql = "SELECT * FROM orderitems WHERE order_id = " + orderId;
+            ResultSet orderItemsResult = stmt.executeQuery(getOrderItemsSql);
+
+            // Loop through the order items and update the price for each item
+            while (orderItemsResult.next()) {
+                int productId = orderItemsResult.getInt("p_id");
+                double basePrice = orderItemsResult.getDouble("price");
+                double newPrice = basePrice * (1 - discount);
+
+                // Update the price for the current order item
+                String updateOrderItemSql = "UPDATE orderitems SET price = " + newPrice + " WHERE order_id = " + orderId + " AND p_id = " + productId;
+                stmt.executeUpdate(updateOrderItemSql);
+            }
+
+            System.out.println("Prices updated with discount code " + d_code);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
 
     public void checkDiscount(String dCode, int productId){
@@ -50,7 +111,7 @@ public class Discount {
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
                 System.out.println("Record was successfully found");
-                
+
             }
             else {
                 System.out.println("Record was not found");
@@ -59,7 +120,6 @@ public class Discount {
             e.printStackTrace();
         }
     }
-
 
     public static void printActiveDiscounts() {
         String sql = "SELECT p.p_name, dis.discount, dis.period, dis.d_code, (p.p_baseprice - (p.p_baseprice * dis.discount)) AS final_price " +

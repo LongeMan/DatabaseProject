@@ -140,7 +140,6 @@ public class Main {
         }
     }
 
-
     public static void selectManageProductMenu() {
         boolean completed = false;
         while (!completed) {
@@ -299,7 +298,6 @@ public class Main {
         }
     }
 
-
     public static void selectViewProductsMenu(){
         boolean completed = false;
         while(!completed){
@@ -406,10 +404,10 @@ public class Main {
     }
     public static void selectCustomerViewMenu(int customerId){
         boolean completed = false;
-        Menu.showCustomerViewMenu();
+
 
         while (completed == false){
-
+            Menu.showCustomerViewMenu();
             Scanner scanner = new Scanner(System.in);
             System.out.print("Select the option: ");
             int choice = scanner.nextInt();
@@ -450,9 +448,21 @@ public class Main {
 
                     break;
                 case 3:
+                    Order.ShowAllOrders(customerId);
+
                     // code to retrieve the customer's orders from the database using the customerId
                     break;
                 case 4:
+                    Order.ShowcurrentOrder(customerId);
+                    break;
+                case 5:
+                    Discount.printActiveDiscounts();
+                    break;
+                case 6:
+
+                    System.out.println("Enter discount code: ");
+                    String d_code = Utilities.getString();
+                    Discount.insertDiscount(customerId, d_code);
 
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
@@ -496,7 +506,6 @@ public class Main {
         }
         return customerId;
     }
-
 
     public static void signUp(String firstname, String lastname, String city, String address, String phoneNumber, String email, String country, String username, String password) {
 

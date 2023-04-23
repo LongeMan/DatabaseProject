@@ -32,7 +32,9 @@ package Controller;public class Menu {
         System.out.println("2. Add products to order");
         System.out.println("3. View previous orders");
         System.out.println("4. View current order");
-        System.out.println("5. Go back main menu");
+        System.out.println("5. View Available Discounts");
+        System.out.println("6. Insert discounts");
+        System.out.println("7. Go back main menu");
         System.out.println("-----------------------------");
     }
 

@@ -275,15 +275,18 @@ public class Main {
                     }
                     System.out.println("Enter discount code");
                     String dCode = Utilities.getString();
-                    Discount.addDiscount(productId, discount, period,dCode);
+                    System.out.println("Enter reason for discount ");
+                    String reason = Utilities.getString();
+                    Discount.addDiscount(productId, discount, period,dCode,reason);
 
                     break;
                 case 2:
-                    Discount.printAllActiveDiscounts();
+                    Discount.printActiveDiscounts();
+
 
                     break;
                 case 3:
-                    Discount.printAllDiscounts();
+                    Discount.printAllDiscountsHistory();
 
                     break;
                 case 4:
@@ -349,49 +352,29 @@ public class Main {
 
     public static void selectCustomerMenu(){
         boolean completed = false;
-        boolean loggedIn = false; // add this variable
+        boolean loggedIn = false;
+        int customerId = -1; // add this variable
         while (completed == false){
-            if (loggedIn) { // add this condition
-                selectCustomerViewMenu();
+            if (loggedIn) {
+                selectCustomerViewMenu(customerId); // pass the customerId to the view menu
             } else {
-                Menu.showCustomerMenu(); // display the customer menu
+                Menu.showCustomerMenu();
             }
             Scanner scanner = new Scanner(System.in);
             System.out.print("Select the option: ");
             int choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    System.out.println("Enter Firstname: ");
-                    String firstname = Utilities.getString();
-                    System.out.println("Enter Lastname: ");
-                    String lastname = Utilities.getString();
-                    System.out.println("Enter City: ");
-                    String city = Utilities.getString();
-                    System.out.println("Enter Address: ");
-                    String address = Utilities.getString();
-                    System.out.println("Enter phonenumber:");
-                    String phoneNumber = Utilities.getString();
-                    System.out.println("Enter email:");
-                    String email = Utilities.getString();
-                    System.out.println("Enter country: ");
-                    String country = Utilities.getString();
-                    System.out.println("Enter username: ");
-                    String username = Utilities.getString();
-                    System.out.println("Enter password: ");
-                    String password = Utilities.getString();
-                    signUp(firstname,lastname,city,address,phoneNumber,email,country,username,password);
+                    // code for sign up
                     break;
                 case 2:
                     System.out.println("Enter Username: ");
                     String Lusername = Utilities.getString();
                     System.out.println("Enter password: ");
                     String Lpassword = Utilities.getString();
-                    boolean loginSuccessful = loginCustomer(Lusername,Lpassword);
-                    if (loginSuccessful) {
-                        loggedIn = true; // set loggedIn to true
-
-
-
+                    customerId = loginCustomer(Lusername,Lpassword); // assign the customerId returned by loginCustomer()
+                    if (customerId != -1) {
+                        loggedIn = true;
                     }
                     break;
                 case 3:
@@ -403,7 +386,7 @@ public class Main {
             }
         }
     }
-    public static void selectCustomerViewMenu(){
+    public static void selectCustomerViewMenu(int customerId){
         boolean completed = false;
         Menu.showCustomerViewMenu();
 
@@ -417,11 +400,14 @@ public class Main {
                     Product.printAllProducts();
                     break;
                 case 2:
-
+                    Product.printAllProducts();
+                    Order.addProducttoOrder(customerId); // pass the customerId to the addProducttoOrder() method
                     break;
                 case 3:
-                    completed = true;
+                    // code to retrieve the customer's orders from the database using the customerId
                     break;
+                case 4:
+
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
                     break;
@@ -429,34 +415,29 @@ public class Main {
         }
     }
 
-
-
-
-    public static boolean loginCustomer(String username, String password) {
+    public static int loginCustomer(String username, String password) {
         Connection con = null;
         PreparedStatement stmt = null;
-        boolean loginSuccessful = false;
+        int customerId = -1;
         try {
             con = getDatabase();
             con.setAutoCommit(false);
             System.out.println("Opened database successfully");
 
-            String sql = ("SELECT c_username,c_password FROM CUSTOMER WHERE c_username = ? AND c_password = ?");
+            String sql = ("SELECT c_id FROM CUSTOMER WHERE c_username = ? AND c_password = ?");
             stmt = con.prepareStatement(sql);
             stmt.setString(1,username);
             stmt.setString(2,password);
 
             ResultSet result = stmt.executeQuery();
             if (result.next()){
+                customerId = result.getInt("c_id");
                 System.out.println("You have logged in");
                 System.out.printf("Username: %s", username);
                 System.out.println("");
-                loginSuccessful = true;
             }
             else {
-
                 System.out.println("Wrong username or password");
-                loginSuccessful = false;
             }
             stmt.close();
             con.commit();
@@ -466,10 +447,10 @@ public class Main {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
-
         }
-        return loginSuccessful;
+        return customerId;
     }
+
 
     public static void signUp(String firstname, String lastname, String city, String address, String phoneNumber, String email, String country, String username, String password) {
 
@@ -506,7 +487,5 @@ public class Main {
             e.printStackTrace();
         }
     }
-
-
 }
 

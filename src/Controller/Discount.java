@@ -2,6 +2,7 @@ package Controller;
 import Controller.*;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class Discount {
     private int pID;
@@ -9,10 +10,10 @@ public class Discount {
     private int period;
     private String dCode;
 
-    public static void addDiscount(int pID, double discount, int period, String dCode){
-        try (Connection con = Main.getDatabase()){
-            // Check if the p_id value exists in the PRODUCTS table
-            String checkSql = "SELECT P_ID FROM PRODUCT WHERE P_ID = ?";
+    public static void addDiscount(int pID, double discount, int period, String dCode, String reason) {
+        try (Connection con = Main.getDatabase()) {
+            // Check if the p_id value exists in the Product table
+            String checkSql = "SELECT p_id FROM Product WHERE p_id = ?";
             PreparedStatement checkStmt = con.prepareStatement(checkSql);
             checkStmt.setInt(1, pID);
             ResultSet rs = checkStmt.executeQuery();
@@ -20,21 +21,27 @@ public class Discount {
                 throw new IllegalArgumentException("Invalid product ID");
             }
 
-
-            String sql = "INSERT INTO DISCOUNTS(p_id,discount,period,d_code) VALUES(?,?,?,?)";
+            String sql = "INSERT INTO Discounts(d_code, p_id, discount, period, reason, start_date) VALUES (?, ?, ?, ?, ?, CURRENT_DATE)";
             PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setInt(1, pID);
-            stmt.setDouble(2,discount);
-            stmt.setInt(3,period);
-            stmt.setString(4,dCode);
+            stmt.setString(1, dCode);
+            stmt.setInt(2, pID);
+            stmt.setDouble(3, discount);
+            stmt.setInt(4, period);
+            stmt.setString(5, reason);
 
-            stmt.executeUpdate();
-            System.out.println("Record inserted successfully");
-
-        }catch (Exception e){
+            int rowsInserted = stmt.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("New discount added successfully");
+            } else {
+                System.out.println("Failed to add discount");
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
+
+
     public void checkDiscount(String dCode, int productId){
         try (Connection con = Main.getDatabase()){
             String sql = "SELECT * FROM DISCOUNTS WHERE (d_code = ?)";
@@ -52,25 +59,31 @@ public class Discount {
             e.printStackTrace();
         }
     }
-    public static void printAllActiveDiscounts() {
+
+
+    public static void printActiveDiscounts() {
+        String sql = "SELECT p.p_name, dis.discount, dis.period, dis.d_code, (p.p_baseprice - (p.p_baseprice * dis.discount)) AS final_price " +
+                "FROM discounts dis " +
+                "JOIN product p ON dis.p_id = p.p_id " +
+                "WHERE dis.start_date <= CURRENT_DATE " +
+                "AND (dis.start_date + dis.period * INTERVAL '1 DAY') >= CURRENT_DATE";
+
         try (Connection con = Main.getDatabase()) {
-            String sql = "SELECT Discounts.p_id, p_name, discount, period, d_code " +
-                    "FROM Discounts JOIN Product ON Discounts.p_id = Product.p_id " +
-                    "WHERE NOW() <= DATE_ADD(date_created, INTERVAL period DAY)";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int pID = rs.getInt("p_id");
                 String pName = rs.getString("p_name");
                 double discount = rs.getDouble("discount");
                 int period = rs.getInt("period");
-                String d_code = rs.getString("d_code");
+                String dCode = rs.getString("d_code");
+                double finalPrice = rs.getDouble("final_price");
 
                 System.out.println("Product Name: " + pName);
-                System.out.println("Discount percentage: " + (100*discount));
-                System.out.println("Discount period (days): " + period);
-                System.out.println("Discount code: " + d_code);
+                System.out.println("Discount percentage: " + (100*discount) + "%");
+                System.out.println("Discount period: " + period + " days");
+                System.out.println("Discount code: " + dCode);
+                System.out.println("Final price after discount: " + finalPrice);
                 System.out.println("-----------------------------");
             }
         } catch (SQLException e) {
@@ -82,24 +95,32 @@ public class Discount {
 
 
 
-    public static void printAllDiscounts() {
+
+
+
+
+    public static void printAllDiscountsHistory() {
         try (Connection con = Main.getDatabase()) {
-            String sql = "SELECT Discounts.p_id, p_name, discount, period, d_code " +
-                    "FROM Discounts JOIN Product ON Discounts.p_id = Product.p_id";
+            String sql = "SELECT p.p_name, d.discount, d.period, d.d_code, d.start_date, (p.p_baseprice - (p.p_baseprice * d.discount)) AS final_price " +
+                    "FROM discounts d " +
+                    "JOIN product p ON d.p_id = p.p_id";
             PreparedStatement stmt = con.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int pID = rs.getInt("p_id");
                 String pName = rs.getString("p_name");
                 double discount = rs.getDouble("discount");
                 int period = rs.getInt("period");
-                String d_code = rs.getString("d_code");
+                String dCode = rs.getString("d_code");
+                Date startDate = rs.getDate("start_date");
+                double finalPrice = rs.getDouble("final_price");
 
                 System.out.println("Product Name: " + pName);
-                System.out.println("Discount percentage: " + (100*discount)+"%");
-                System.out.println("Discount period: " + period);
-                System.out.println("Discount code: " + d_code);
+                System.out.println("Discount percentage: " + (100*discount) + "%");
+                System.out.println("Discount period: " + period + " days");
+                System.out.println("Discount code: " + dCode);
+                System.out.println("Start date of discount: " + startDate);
+                System.out.println("Final price after discount: " + finalPrice);
                 System.out.println("-----------------------------");
             }
         } catch (SQLException e) {
@@ -107,6 +128,10 @@ public class Discount {
             throw new RuntimeException(e);
         }
     }
+
+
+
+
 
 
 

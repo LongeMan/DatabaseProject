@@ -56,8 +56,9 @@ package Controller;public class Menu {
     public static void manageDiscountMenu(){
         System.out.println("Manage Discounts:");
         System.out.println("1. Assign Discount to Product");
-        System.out.println("2. View Discount History");
-        System.out.println("3. Return to Main Menu");
+        System.out.println("2. View Active Discounts");
+        System.out.println("3. View Discount History");
+        System.out.println("4. Return to Main Menu");
         System.out.println("-----------------------------");
     }
 

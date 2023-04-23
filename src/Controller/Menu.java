@@ -13,6 +13,7 @@ package Controller;public class Menu {
         System.out.println("2. Manage Product");
         System.out.println("3. Manage Discounts");
         System.out.println("4. View Product list");
+        System.out.println("5. Manage Confirmation");
         System.out.println("5. Go back to main menu");
         System.out.println("-----------------------------");
     }

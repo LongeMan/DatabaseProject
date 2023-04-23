@@ -365,7 +365,25 @@ public class Main {
             int choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    // code for sign up
+                    System.out.println("Enter Firstname: ");
+                    String firstname = Utilities.getString();
+                    System.out.println("Enter Lastname: ");
+                    String lastname = Utilities.getString();
+                    System.out.println("Enter City: ");
+                    String city = Utilities.getString();
+                    System.out.println("Enter Address: ");
+                    String address = Utilities.getString();
+                    System.out.println("Enter phonenumber:");
+                    String phoneNumber = Utilities.getString();
+                    System.out.println("Enter email:");
+                    String email = Utilities.getString();
+                    System.out.println("Enter country: ");
+                    String country = Utilities.getString();
+                    System.out.println("Enter username: ");
+                    String username = Utilities.getString();
+                    System.out.println("Enter password: ");
+                    String password = Utilities.getString();
+                    signUp(firstname,lastname,city,address,phoneNumber,email,country,username,password);
                     break;
                 case 2:
                     System.out.println("Enter Username: ");
@@ -401,7 +419,35 @@ public class Main {
                     break;
                 case 2:
                     Product.printAllProducts();
-                    Order.addProducttoOrder(customerId); // pass the customerId to the addProducttoOrder() method
+
+
+                    int productId = 0;
+                    boolean isProductIdValid = false;
+                    while (!isProductIdValid) {
+                        System.out.println("Enter Product Id: ");
+                        String input = Utilities.getString();
+                        try {
+                            productId = Integer.parseInt(input);
+                            isProductIdValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+                    int productQuantity = 0;
+                    boolean isProductQuantityValid = false;
+                    while (!isProductQuantityValid) {
+                        System.out.println("Enter Quantity: ");
+                        String input = Utilities.getString();
+                        try {
+                            productQuantity = Integer.parseInt(input);
+                            isProductQuantityValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+
+                    Order.addProductToOrder(customerId,productId,productQuantity ); // pass the customerId to the addProducttoOrder() method
+
                     break;
                 case 3:
                     // code to retrieve the customer's orders from the database using the customerId
@@ -424,14 +470,14 @@ public class Main {
             con.setAutoCommit(false);
             System.out.println("Opened database successfully");
 
-            String sql = ("SELECT c_id FROM CUSTOMER WHERE c_username = ? AND c_password = ?");
+            String sql = ("SELECT user_id FROM CUSTOMER WHERE c_username = ? AND c_password = ?");
             stmt = con.prepareStatement(sql);
             stmt.setString(1,username);
             stmt.setString(2,password);
 
             ResultSet result = stmt.executeQuery();
             if (result.next()){
-                customerId = result.getInt("c_id");
+                customerId = result.getInt("user_id");
                 System.out.println("You have logged in");
                 System.out.printf("Username: %s", username);
                 System.out.println("");

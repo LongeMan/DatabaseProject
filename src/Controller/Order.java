@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.Calendar;
 
 public class Order {
+
+
     public static void addProductToOrder(int customerId, int productId, int quantity) {
         // Check if customer has an unconfirmed order
         boolean hasUnconfirmedOrder = false;
@@ -37,6 +39,23 @@ public class Order {
                 e.printStackTrace();
             }
         }
+
+        // Check if the product is already in the order and update the quantity if so
+        boolean productExistsInOrder = false;
+        try (Connection conn = Main.getDatabase()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT quantity FROM orderitems WHERE order_id = ? AND p_id = ?");
+            stmt.setInt(1, orderId);
+            stmt.setInt(2, productId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                productExistsInOrder = true;
+                int currentQuantity = rs.getInt("quantity");
+                quantity += currentQuantity;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         // Add the product to the order and decrease the product quantity
         try (Connection conn = Main.getDatabase()) {
             // Check if the product exists and has enough quantity
@@ -71,13 +90,10 @@ public class Order {
             e.printStackTrace();
         }
 
-
-
-        System.out.println("Product added to order.");
     }
 
 
-    public static void ShowcurrentOrder(int customerId) {
+        public static void ShowcurrentOrder(int customerId) {
         try (Connection conn = Main.getDatabase()) {
             // Check if there is an unconfirmed order for the given customer
             PreparedStatement stmt = conn.prepareStatement("SELECT order_id FROM orders WHERE customer_id = ? AND NOT EXISTS (SELECT 1 FROM confirmation WHERE confirmation.order_id = orders.order_id)");

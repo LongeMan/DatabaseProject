@@ -24,7 +24,7 @@ public class Main {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         boolean completed = false; //Boolean value is set to false
 
@@ -59,14 +59,10 @@ public class Main {
                     System.out.println("Invalid choice. Please select a valid option.");
                     break;
             }
-
         }
-
-
     }
 
-    public static void selectAdminMenu(){
-
+    public static void selectAdminMenu() throws SQLException {
         boolean completed = false;
 
         while (completed == false){
@@ -92,6 +88,10 @@ public class Main {
 
                     break;
                 case 5:
+                    selectManageConfirmationMenu();
+
+                    break;
+                case 6:
                     completed = true;
                     break;
                 default:
@@ -99,7 +99,6 @@ public class Main {
                     break;
             }
         }
-
     }
 
     public static void selectManageSupplierMenu(){
@@ -140,7 +139,7 @@ public class Main {
         }
     }
 
-    public static void selectManageProductMenu() {
+    public static void selectManageProductMenu() throws SQLException {
         boolean completed = false;
         while (!completed) {
             Menu.manageProductMenu();
@@ -198,6 +197,8 @@ public class Main {
                     // code for managing products
                     break;
                 case 3:
+                    Product.printAllProducts();
+
                     int productId = 0;
                     boolean isProductIdValid = false;
                     while (!isProductIdValid) {
@@ -212,6 +213,39 @@ public class Main {
                     }
                     Product.removeProduct(productId);
                     break;
+                case 4:
+                    Product.printAllProducts();
+
+                    int chosenProductId = 0;
+                    boolean isChosenProductIdValid = false;
+                    while (!isChosenProductIdValid) {
+                        System.out.println("Enter Product Id: ");
+                        String input = Utilities.getString();
+                        try {
+                            chosenProductId = Integer.parseInt(input);
+                            isChosenProductIdValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+
+
+                    int quantityChange = 0;
+                    boolean isQuantityChangeValid = false;
+                    while (!isQuantityChangeValid) {
+                        System.out.println("Enter quantity change: ");
+                        String input = Utilities.getString();
+                        try {
+                            quantityChange = Integer.parseInt(input);
+                            isQuantityChangeValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+
+                    Product.EditQuantity(chosenProductId, quantityChange);
+
+
                 case 5:
                     completed = true;
                     break;
@@ -272,11 +306,23 @@ public class Main {
                             System.out.println("Invalid input. Please enter an integer.");
                         }
                     }
-                    System.out.println("Enter discount code");
-                    String dCode = Utilities.getString();
-                    System.out.println("Enter reason for discount ");
-                    String reason = Utilities.getString();
-                    Discount.addDiscount(productId, discount, period,dCode,reason);
+                    Discount.printAllReasons();
+
+                    int reasonid = 0;
+                    boolean isReasonIdValid = false;
+                    while (!isReasonIdValid) {
+                        System.out.println("Enter reason id for discount ");
+                        String input = Utilities.getString();
+                        try {
+                            reasonid = Integer.parseInt(input);
+                            isReasonIdValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+
+
+                    Discount.addDiscount(productId, discount, period,reasonid);
 
                     break;
                 case 2:
@@ -413,10 +459,10 @@ public class Main {
             int choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    Product.printAllProducts();
+                    Product.printAllProductsAndDiscounts();
                     break;
                 case 2:
-                    Product.printAllProducts();
+                    Product.printProductsInStock();
 
 
                     int productId = 0;
@@ -450,25 +496,81 @@ public class Main {
                 case 3:
                     Order.ShowAllOrders(customerId);
 
-                    // code to retrieve the customer's orders from the database using the customerId
                     break;
                 case 4:
-                    Order.ShowcurrentOrder(customerId);
+                    Order.ShowCurrentOrder(customerId);
                     break;
                 case 5:
                     Discount.printActiveDiscounts();
                     break;
                 case 6:
+                    Order.removeCurrentOrderItems(customerId);
+                    break;
+                case 7:
 
-                    System.out.println("Enter discount code: ");
-                    String d_code = Utilities.getString();
-                    Discount.insertDiscount(customerId, d_code);
+                    completed = true;
+                    Menu.showCustomerMenu();
+                    break;
 
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
                     break;
             }
         }
+    }
+    public static void selectManageConfirmationMenu() throws SQLException {
+        boolean completed = false;
+        while(completed==false){
+            Menu.manageConfirmation();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Select the option: ");
+            int choice = scanner.nextInt();
+
+            switch (choice){
+                case 1:
+                    Order.printUnconfirmedOrders();
+
+                    int chosenOrder = 0;
+                    boolean isChosenOrderValid = false;
+                    while (!isChosenOrderValid) {
+                        System.out.println("Enter the order id you want to confrim: ");
+                        String input = Utilities.getString();
+                        try {
+                           chosenOrder = Integer.parseInt(input);
+                            isChosenOrderValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+                    Order.confirmOrder(chosenOrder);
+                    break;
+
+                case 2:
+                    Order.printUnconfirmedOrders();
+
+                    int chosenOrderToRemove = 0;
+                    boolean isChosenOrderToRemoveValid = false;
+                    while (!isChosenOrderToRemoveValid) {
+                        System.out.println("Enter the order id you want to cancel: ");
+                        String input = Utilities.getString();
+                        try {
+                            chosenOrderToRemove = Integer.parseInt(input);
+                            isChosenOrderToRemoveValid = true;
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter an integer.");
+                        }
+                    }
+                    Order.removeOrder(chosenOrderToRemove);
+                    break;
+                case 3:
+                    completed = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice, please select a valid option.");
+                    break;
+            }
+        }
+
     }
 
     public static int loginCustomer(String username, String password) {

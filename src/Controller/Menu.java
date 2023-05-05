@@ -14,7 +14,7 @@ package Controller;public class Menu {
         System.out.println("3. Manage Discounts");
         System.out.println("4. View Product list");
         System.out.println("5. Manage Confirmation");
-        System.out.println("5. Go back to main menu");
+        System.out.println("6. Return");
         System.out.println("-----------------------------");
     }
 
@@ -22,7 +22,7 @@ package Controller;public class Menu {
         System.out.println("Customer Menu");
         System.out.println("1. Signup");
         System.out.println("2. Login");
-        System.out.println("3. Go back main menu");
+        System.out.println("3. Return");
         System.out.println("-----------------------------");
     }
 
@@ -33,8 +33,8 @@ package Controller;public class Menu {
         System.out.println("3. View previous orders");
         System.out.println("4. View current order");
         System.out.println("5. View Available Discounts");
-        System.out.println("6. Insert discounts");
-        System.out.println("7. Go back main menu");
+        System.out.println("6. delete order");
+        System.out.println("7. Return");
         System.out.println("-----------------------------");
     }
 
@@ -43,7 +43,7 @@ package Controller;public class Menu {
         System.out.println("1. Add New Supplier");
         System.out.println("2. Delete Supplier");//
         System.out.println("3. View All Suppliers");//
-        System.out.println("4. Return to Main Menu");
+        System.out.println("4. Return");
         System.out.println("-----------------------------");
     }
 
@@ -51,9 +51,9 @@ package Controller;public class Menu {
         System.out.println("Manage Products:");
         System.out.println("1. Add New Product");
         System.out.println("2. Edit Product Information not implemented");
-        System.out.println("3. Delete Product not");
-        System.out.println("4. Adjust Product Quantity not implemented");
-        System.out.println("5. Return to Main Menu");
+        System.out.println("3. Delete Product");
+        System.out.println("4. Adjust Product Quantity");
+        System.out.println("5. Return");
         System.out.println("-----------------------------");
     }
     public static void manageDiscountMenu(){
@@ -61,7 +61,7 @@ package Controller;public class Menu {
         System.out.println("1. Assign Discount to Product");
         System.out.println("2. View Active Discounts");
         System.out.println("3. View Discount History");
-        System.out.println("4. Return to Main Menu");
+        System.out.println("4. Return");
         System.out.println("-----------------------------");
     }
 
@@ -71,7 +71,14 @@ package Controller;public class Menu {
         System.out.println("2. Search Products by Name");
         System.out.println("3. Search Products by Supplier");
         System.out.println("4. View All Products");
-        System.out.println("5. Return to Main Menu");
+        System.out.println("5. Return");
+        System.out.println("-----------------------------");
+    }
+    public static void manageConfirmation(){
+        System.out.println("Manage Confrimation");
+        System.out.println("1. Confirm Orders");
+        System.out.println("2. Cancel Orders");
+        System.out.println("3. Return");
         System.out.println("-----------------------------");
     }
 

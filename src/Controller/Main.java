@@ -140,7 +140,7 @@ public class Main {
 
                     break;
                 case 3:
-
+                    Supplier.printAllSuppliers();
 
                     break;
                 case 4:

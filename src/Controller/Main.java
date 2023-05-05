@@ -32,8 +32,18 @@ public class Main {
             Menu.showMainMenu();
             Scanner scanner = new Scanner(System.in); //Scanner for  choice in menu
             Scanner scanner2 = new Scanner(System.in); //Scanner for userID
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
             switch (choice){
                 case 1: //Choice = Admin
                     System.out.println("Type your admin ID: ");
@@ -408,9 +418,19 @@ public class Main {
             } else {
                 Menu.showCustomerMenu();
             }
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
+
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
             switch (choice){
                 case 1:
                     System.out.println("Enter Firstname: ");

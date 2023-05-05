@@ -81,10 +81,18 @@ public class Main {
 
         while (completed == false){
             Menu.showAdminMenu();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
-
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
             switch (choice){
                 case 1:
                     selectManageSupplierMenu();
@@ -119,10 +127,18 @@ public class Main {
         boolean completed = false;
         while(completed==false){
             Menu.manageSupplierMenu();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
-
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
             switch (choice){
                 case 1:
                     System.out.println("Adding Supplier now:");
@@ -157,10 +173,18 @@ public class Main {
         boolean completed = false;
         while (!completed) {
             Menu.manageProductMenu();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
-
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
             switch (choice) {
                 case 1:
                     System.out.println("Adding product now:");
@@ -273,10 +297,18 @@ public class Main {
         boolean completed = false;
         while(completed==false){
             Menu.manageDiscountMenu();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
-
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
             switch (choice){
                 case 1:
                     System.out.println("Adding discount now:");
@@ -363,9 +395,19 @@ public class Main {
         while(!completed){
 
             Menu.viewProductList();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
+
             switch (choice){
                 case 1:
                     int productId = 0;
@@ -478,15 +520,23 @@ public class Main {
 
         while (completed == false){
             Menu.showCustomerViewMenu();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
             switch (choice){
                 case 1:
 
                     selectViewProductsMenu();
 
-                    //Product.printAllProductsAndDiscounts();
                     break;
                 case 2:
                     Product.printProductsInStock();
@@ -552,10 +602,18 @@ public class Main {
         boolean completed = false;
         while(completed==false){
             Menu.manageConfirmation();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Select the option: ");
-            int choice = scanner.nextInt();
-
+            int choice = 0;
+            boolean isChoiceValid = false;
+            while (!isChoiceValid) {
+                System.out.println("Enter choice: ");
+                String input = Utilities.getString();
+                try {
+                    choice = Integer.parseInt(input);
+                    isChoiceValid = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter an integer.");
+                }
+            }
             switch (choice){
                 case 1:
                     Order.printUnconfirmedOrders();

@@ -3,7 +3,8 @@ package Controller;public class Menu {
     public static void showMainMenu(){
         System.out.println("1. Admin");
         System.out.println("2. Customer");
-        System.out.println("3. End program");
+        System.out.println("3. View Products");
+        System.out.println("4. End program");
         System.out.println("-----------------------------");
     }
 
@@ -33,8 +34,9 @@ package Controller;public class Menu {
         System.out.println("3. View previous orders");
         System.out.println("4. View current order");
         System.out.println("5. View Available Discounts");
-        System.out.println("6. delete order");
-        System.out.println("7. Return");
+        System.out.println("6. Delete current order");
+        System.out.println("7. View most sold items");
+        System.out.println("8. Return");
         System.out.println("-----------------------------");
     }
 

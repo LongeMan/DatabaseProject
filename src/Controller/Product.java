@@ -1,9 +1,7 @@
 package Controller;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
 
 public class Product {
 
@@ -60,35 +58,10 @@ public class Product {
         }
     }
 
-    public static void printAllProducts() {
-        try (Connection con = Main.getDatabase()) {
-            String sql = "SELECT * FROM PRODUCT";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                String pID = rs.getString("p_id");
-                String pName = rs.getString("p_name");
-                int pQuantity = rs.getInt("p_quantity");
-                int pBasePrice = rs.getInt("p_baseprice");
-                int pSupplier = rs.getInt("p_supplier");
-
-                System.out.println("Product ID: " + pID);
-                System.out.println("Product Name: " + pName);
-                System.out.println("Product Quantity: " + pQuantity);
-                System.out.println("Product Base Price: " + pBasePrice);
-                System.out.println("Product Supplier: " + pSupplier);
-                System.out.println("-----------------------------");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
 
     public static void printAllProductsAndDiscounts() {
         try (Connection con = Main.getDatabase()) {
-            String sql = "SELECT p.p_id, p.p_name, p.p_quantity, p.p_baseprice, p.p_supplier, d.discount, d.period, dr.reason " +
+            String sql = "SELECT p.p_id, p.p_name, p.p_quantity, p.p_baseprice, p.p_supplier, d.discount, d.period, d.start_date, dr.reason " +
                     "FROM product p " +
                     "LEFT JOIN discounts d ON p.p_id = d.p_id " +
                     "LEFT JOIN discountreason dr ON d.discountreason_id = dr.discountreason_id";
@@ -105,17 +78,21 @@ public class Product {
                 int period = rs.getInt("period");
                 String reason = rs.getString("reason");
 
+
                 System.out.println("Product ID: " + pID);
                 System.out.println("Product Name: " + pName);
                 System.out.println("Product Quantity: " + pQuantity);
                 System.out.println("Product Base Price: " + pBasePrice);
-                System.out.println("Product Supplier: " + pSupplier);
 
                 if (discount != 0) {
-                    System.out.println("Discount percentage: " + (100*discount) + "%");
-                    System.out.println("Discount period: " + period + " days");
+                    double discountedPrice = pBasePrice * (1 - discount);
+                    System.out.println("Discounted Price: " + discountedPrice);
+                    System.out.println("Discount Percentage: " + (100*discount) + "%");
+                    System.out.println("Discount Period: " + period + " days");
+                    LocalDate startDate = rs.getDate("start_date").toLocalDate();
+                    System.out.println("Start Date: " + startDate);
                     if (reason != null) {
-                        System.out.println("Reason for discount: " + reason);
+                        System.out.println("Reason for Discount: " + reason);
                     }
                 } else {
                     System.out.println("This product is not currently on discount.");
@@ -127,6 +104,7 @@ public class Product {
             throw new RuntimeException(e);
         }
     }
+
 
 
 
@@ -206,6 +184,39 @@ public class Product {
             throw new RuntimeException(e);
         }
     }
+    public static void printMostSoldProducts() {
+        try (Connection conn = Main.getDatabase()) {
+            String sql = "SELECT oi.p_id, p.p_name, SUM(oi.quantity) AS total_quantity " +
+                    "FROM public.orderitems oi " +
+                    "JOIN public.product p ON oi.p_id = p.p_id " +
+                    "JOIN public.orders o ON oi.order_id = o.order_id " +
+                    "WHERE o.date >= DATE_TRUNC('month', CURRENT_DATE) AND o.date < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month' " +
+                    "GROUP BY oi.p_id, p.p_name " +
+                    "ORDER BY total_quantity DESC " +
+                    "LIMIT 5";
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            int count = 0;
+            while (rs.next()) {
+                int productId = rs.getInt("p_id");
+                String productName = rs.getString("p_name");
+                int totalQuantity = rs.getInt("total_quantity");
+
+                System.out.printf("%d. %s (product ID: %d) - total quantity: %d\n", ++count, productName, productId, totalQuantity);
+            }
+            if (count == 0) {
+                System.out.println("No product sales found in the current month.");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        }
+    }
+
 
 
 

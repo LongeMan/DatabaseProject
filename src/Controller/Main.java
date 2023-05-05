@@ -52,7 +52,11 @@ public class Main {
                     selectCustomerMenu();
                     break;
                 case 3://Choice = end program
-                    System.out.println("End program");
+                    System.out.println("Viewing Products");
+                    selectViewProductsMenu();
+                    break;
+                case 4://Choice = end program
+                    System.out.println("Ended program");
                     completed = true;
                     break;
                 default:
@@ -197,7 +201,7 @@ public class Main {
                     // code for managing products
                     break;
                 case 3:
-                    Product.printAllProducts();
+                    Product.printAllProductsAndDiscounts();
 
                     int productId = 0;
                     boolean isProductIdValid = false;
@@ -214,7 +218,7 @@ public class Main {
                     Product.removeProduct(productId);
                     break;
                 case 4:
-                    Product.printAllProducts();
+                    Product.printAllProductsAndDiscounts();
 
                     int chosenProductId = 0;
                     boolean isChosenProductIdValid = false;
@@ -266,7 +270,7 @@ public class Main {
             switch (choice){
                 case 1:
                     System.out.println("Adding discount now:");
-                    Product.printAllProducts();
+                    Product.printAllProductsAndDiscounts();
 
                     int productId = 0;
                     boolean isProductIdValid = false;
@@ -380,7 +384,7 @@ public class Main {
                     Product.getProductsBySupplierName(supplierId);
                     break;
                 case 4:
-                    Product.printAllProducts();
+                    Product.printAllProductsAndDiscounts();
                     break;
                 case 5:
                     completed = true;
@@ -459,7 +463,10 @@ public class Main {
             int choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    Product.printAllProductsAndDiscounts();
+
+                    selectViewProductsMenu();
+
+                    //Product.printAllProductsAndDiscounts();
                     break;
                 case 2:
                     Product.printProductsInStock();
@@ -507,6 +514,9 @@ public class Main {
                     Order.removeCurrentOrderItems(customerId);
                     break;
                 case 7:
+                    Product.printMostSoldProducts();
+                    break;
+                case 8:
 
                     completed = true;
                     Menu.showCustomerMenu();

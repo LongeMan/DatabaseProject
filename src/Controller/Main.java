@@ -13,7 +13,7 @@ public class Main {
             Class.forName("org.postgresql.Driver");
             con  = DriverManager
                     .getConnection("jdbc:postgresql://pgserver.mau.se:5432/onlinestore_vot",
-                            "an7201", "ynvrxbxm");
+                            "an7201", "uklf232q");
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName()+": "+e.getMessage());
